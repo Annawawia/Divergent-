@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tes Fraksi Divergent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f1c2e, #1c1f27);
+      color: #f0f0f0;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: rgba(20, 20, 30, 0.95);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      max-width: 480px;
+      width: 100%;
+      animation: fadeIn 1s ease;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #ffcc00;
+    }
+
+    p {
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+
+    select, button {
+      width: 100%;
+      font-size: 16px;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+    }
+
+    select {
+      background-color: #1e2a3a;
+      color: #f0f0f0;
+      border: 1px solid #555;
+    }
+
+    button {
+      background-color: #ffcc00;
+      color: #1c1c1c;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffd633;
+      transform: scale(1.03);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #263648;
+      color: #fff;
+      display: none;
+      animation: slideUp 0.5s ease-out forwards;
+    }
+
+    .result strong {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 10px;
+      color: #ffcc00;
+    }
+
+    .desc {
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); display: block; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="icon">♾️</div>
+    <h1>Uji Fraksi Divergent</h1>
+    <p>Pilih tanggal lahirmu dan temukan fraksi dominanmu berdasarkan numerologi!</p>
+
+    <select id="tgl">
+      <option value="">Tanggal</option>
+      <!-- 1-31 -->
+      <script>
+        for(let i=1;i<=31;i++){
+          document.write(`<option value="${i < 10 ? '0'+i : i}">${i}</option>`);
+        }
+      </script>
+    </select>
+
+    <select id="bln">
+      <option value="">Bulan</option>
+      <script>
+        const bulan = [
+          '01','02','03','04','05','06','07','08','09','10','11','12'
+        ];
+        bulan.forEach(b => {
+          document.write(`<option value="${b}">${b}</option>`);
+        });
+      </script>
+    </select>
+
+    <select id="thn">
+      <option value="">Tahun</option>
+      <script>
+        const tahunSekarang = new Date().getFullYear();
+        for(let i = tahunSekarang; i >= 1950; i--) {
+          document.write(`<option value="${i}">${i}</option>`);
+        }
+      </script>
+    </select>
+
+    <button onclick="proses()">Lihat Fraksi</button>
+
+    <div class="result" id="hasil"></div>
+  </div>
+
+  <script>
+    function proses() {
+      const tgl = document.getElementById("tgl").value;
+      const bln = document.getElementById("bln").value;
+      const thn = document.getElementById("thn").value;
+      const hasilEl = document.getElementById("hasil");
+
+      if (!tgl || !bln || !thn) {
+        hasilEl.innerHTML = `<strong>⚠️ Lengkapi semua tanggal lahir terlebih dahulu.</strong>`;
+        hasilEl.style.display = "block";
+        return;
+      }
+
+      let gabungan = tgl + bln + thn;
+      let angka = gabungan.split('').reduce((a,b) => a + parseInt(b), 0);
+      while (angka > 9) {
+        angka = angka.toString().split('').reduce((a,b) => a + parseInt(b), 0);
+      }
+
+      const fraksiMap = {
+        1: { fraksi: 'Erudite', emoji: '📘', desc: 'Fraksi para cendekia. Cerdas, logis, dan haus akan pengetahuan.' },
+        2: { fraksi: 'Amity', emoji: '🌼', desc: 'Fraksi perdamaian. Ramah, harmonis, dan penuh kasih.' },
+        3: { fraksi: 'Abnegation', emoji: '🤝', desc: 'Fraksi pengorbanan. Sederhana, tidak egois, dan membantu sesama.' },
+        4: { fraksi: 'Candor', emoji: '⚖️', desc: 'Fraksi kejujuran. Terbuka, tegas, dan menghargai kebenaran.' },
+        5: { fraksi: 'Dauntless', emoji: '🔥', desc: 'Fraksi keberanian. Pemberani, penuh aksi, dan tidak takut risiko.' },
+        6: { fraksi: 'Erudite', emoji: '📘', desc: 'Logis dan analitis. Fraksi para pemikir dan ilmuwan.' },
+        7: { fraksi: 'Amity', emoji: '🌼', desc: 'Pembawa kedamaian dan keceriaan. Suka persahabatan.' },
+        8: { fraksi: 'Dauntless', emoji: '🔥', desc: 'Berani, tangguh, dan penuh tantangan. Siap melindungi.' },
+        9: { fraksi: 'Divergent', emoji: '♾️', desc: 'Kamu tidak bisa dikotakkan. Multitalenta, unik, dan penuh potensi dari semua fraksi.' }
+      };
+
+      const hasil = fraksiMap[angka];
+      hasilEl.innerHTML = `<strong>Fraksi Kamu: ${hasil.fraksi} ${hasil.emoji}</strong><div class="desc">${hasil.desc}</div>`;
+      hasilEl.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
